@@ -79,7 +79,7 @@
     "engraving_red": {
       "type": "pbr",
       "parent": "none",
-      "baseColor": "#8c0000",
+      "baseColor": "#000000",
       "metallic": 0.17,
       "roughness": 0.7000000000000001,
       "alpha": 1,
@@ -97,7 +97,8 @@
       "vOffset": 0,
       "uScale": 1,
       "vScale": 1,
-      "wRotation": 0
+      "wRotation": 0,
+      "lightmapUVSet": 0
     },
     "engraving_blue": {
       "type": "pbr",
