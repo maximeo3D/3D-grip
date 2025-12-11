@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>3D Viewer</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/maximeo3D/3D-Viewer@refs/heads/master/styles.css">
     <script src="https://cdn.babylonjs.com/v7.54.2/babylon.js"></script>
     <script src="https://cdn.babylonjs.com/v7.54.2/loaders/babylonjs.loaders.min.js"></script>
     <script>
@@ -29,24 +29,21 @@
     <script src="https://cdn.babylonjs.com/v7.54.2/materialsLibrary/babylonjs.materials.min.js"></script>
     <script src="https://cdn.babylonjs.com/v7.54.2/hdr/babylonjs.hdr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tweakpane@3.1.10/dist/tweakpane.min.js"></script>
-    <script src="tweakpaneManager.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/maximeo3D/3D-Viewer@refs/heads/master/tweakpaneManager.js"></script>
     <script>
-        // Contrôle de visibilité de la sidebar
-        const showSidebar = true; // Changez true/false pour afficher/cacher la sidebar
-        const showTweakpane = true; // Changez true/false pour afficher/cacher Tweakpane
-        // Exposer pour scene.js
+        const showSidebar = true;
+        const showTweakpane = true;
         window.showTweakpane = showTweakpane;
         document.addEventListener('DOMContentLoaded', () => {
-            // Propager la préférence de visibilité vers le CSS
             document.documentElement.style.setProperty('--sidebar-display', showSidebar ? 'flex' : 'none');
-            // Forcer un resize Babylon pour recalculer le ratio si la largeur change
             window.dispatchEvent(new Event('resize'));
         });
         
         // Configuration par défaut
         const defaultConfig = {
-            option: 'base',
-            blocMaterial: 'red'
+            option: 'mlok',
+            mlokMaterial: 'Black',
+            picatinnyMaterial: 'Black'
         };
     </script>
 </head>
@@ -58,16 +55,16 @@
                     <h3>Options</h3>
                     <div class="buttons">
                         <button class="sidebar-btn" id="option1-btn">M-Lok</button>
-                        <button class="sidebar-btn" id="option1-btn">Picatinny</button>
+                        <button class="sidebar-btn" id="option2-btn">Picatinny</button>
                     </div>
                 </div>
                 
                 <div class="category">
-                    <h3>Bloc Material</h3>
+                    <h3>Rail Material</h3>
                     <div class="buttons">
-                        <button class="sidebar-btn" id="bloc-red-btn">Black</button>
-                        <button class="sidebar-btn" id="bloc-blue-btn">Sand</button>
-                        <button class="sidebar-btn" id="bloc-green-btn">Kaki</button>
+                        <button class="sidebar-btn" id="material-black-btn">Black</button>
+                        <button class="sidebar-btn" id="material-sand-btn">Sand</button>
+                        <button class="sidebar-btn" id="material-kaki-btn">Kaki</button>
                     </div>
                 </div>
                 <div class="category">
@@ -83,70 +80,99 @@
             <canvas id="renderCanvas"></canvas>
         </div>
     </div>
-    <script src="scene.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/maximeo3D/3D-Viewer@refs/heads/master/scene.js"></script>
     <script>
         // Connecter les boutons HTML au système de tags
         document.addEventListener('DOMContentLoaded', function() {
-            // Attendre que le TagManager soit initialisé
-            setTimeout(() => {
-                if (window.tagManager) {
-                    // Bouton Option 1 (affiche le bloc)
-                    document.getElementById('option1-btn').addEventListener('click', () => {
-                        window.tagManager.setOption('base');
-                        updateButtonStates();
-                    });
-                    
-                    // Boutons de matériau pour le bloc
-                    document.getElementById('bloc-red-btn').addEventListener('click', () => {
-                        window.tagManager.applyMaterialConfig('bloc', 'red');
-                        updateButtonStates();
-                    });
-                    
-                    document.getElementById('bloc-blue-btn').addEventListener('click', () => {
-                        window.tagManager.applyMaterialConfig('bloc', 'blue');
-                        updateButtonStates();
-                    });
-                    
-                    document.getElementById('bloc-green-btn').addEventListener('click', () => {
-                        window.tagManager.applyMaterialConfig('bloc', 'green');
-                        updateButtonStates();
-                    });
+            // Initialiser dès que le TagManager est prêt (sans attendre 1s)
+            const maxTries = 120; // ~2s à 60fps avant fallback léger
+            let tries = 0;
 
-                    
-                    // Viewpoints buttons
-                    const vp1Btn = document.getElementById('viewpoint-1-btn');
-                    const vp2Btn = document.getElementById('viewpoint-2-btn');
-                    if (vp1Btn) vp1Btn.addEventListener('click', () => { 
-                        if (window.gotoViewpoint) window.gotoViewpoint('Viewpoint1');
-                        vp1Btn.classList.add('active');
-                        vp2Btn && vp2Btn.classList.remove('active');
-                    });
-                    if (vp2Btn) vp2Btn.addEventListener('click', () => { 
-                        if (window.gotoViewpoint) window.gotoViewpoint('Viewpoint2');
-                        vp2Btn.classList.add('active');
-                        vp1Btn && vp1Btn.classList.remove('active');
-                    });
-                    
-                    // Fonction pour obtenir la couleur active du bloc
-                    function getActiveBlocColor() {
-                        if (document.getElementById('bloc-red-btn').classList.contains('active')) return 'red';
-                        if (document.getElementById('bloc-blue-btn').classList.contains('active')) return 'blue';
-                        if (document.getElementById('bloc-green-btn').classList.contains('active')) return 'green';
-                        return 'green'; // défaut
-                    }
+            function initUI() {
+                if (!window.tagManager) return false;
 
-                    // Mettre à jour l'état initial des boutons
+                // Bouton Option 1 (M-Lok)
+                document.getElementById('option1-btn').addEventListener('click', () => {
+                    window.tagManager.setOption('mlok');
                     updateButtonStates();
-                    // Activer Viewpoint 1 par défaut si présent
-                    const vp1 = document.getElementById('viewpoint-1-btn');
-                    if (vp1) vp1.classList.add('active');                    
+                });
+
+                // Bouton Option 2 (Picatinny)
+                const option2Btn = document.getElementById('option2-btn');
+                if (option2Btn) {
+                    option2Btn.addEventListener('click', () => {
+                        window.tagManager.setOption('picatinny');
+                        updateButtonStates();
+                    });
                 }
-            }, 1000);
+                
+                // Boutons de matériau pour M-Lok et Picatinny
+                document.getElementById('material-black-btn').addEventListener('click', () => {
+                    window.tagManager.applyMaterialConfig('grip_mlok', 'black');
+                    window.tagManager.applyMaterialConfig('grip_picatinny', 'black');
+                    updateButtonStates();
+                });
+                
+                document.getElementById('material-sand-btn').addEventListener('click', () => {
+                    window.tagManager.applyMaterialConfig('grip_mlok', 'sand');
+                    window.tagManager.applyMaterialConfig('grip_picatinny', 'sand');
+                    updateButtonStates();
+                });
+                
+                document.getElementById('material-kaki-btn').addEventListener('click', () => {
+                    window.tagManager.applyMaterialConfig('grip_mlok', 'kaki');
+                    window.tagManager.applyMaterialConfig('grip_picatinny', 'kaki');
+                    updateButtonStates();
+                });
+
+                
+                // Viewpoints buttons
+                const vp1Btn = document.getElementById('viewpoint-1-btn');
+                const vp2Btn = document.getElementById('viewpoint-2-btn');
+                if (vp1Btn) vp1Btn.addEventListener('click', () => { 
+                    if (window.gotoViewpoint) window.gotoViewpoint('Viewpoint1');
+                    vp1Btn.classList.add('active');
+                    vp2Btn && vp2Btn.classList.remove('active');
+                });
+                if (vp2Btn) vp2Btn.addEventListener('click', () => { 
+                    if (window.gotoViewpoint) window.gotoViewpoint('Viewpoint2');
+                    vp2Btn.classList.add('active');
+                    vp1Btn && vp1Btn.classList.remove('active');
+                });
+                
+                // Fonction pour obtenir la couleur active
+                function getActiveMaterialColor() {
+                    if (document.getElementById('material-black-btn').classList.contains('active')) return 'black';
+                    if (document.getElementById('material-sand-btn').classList.contains('active')) return 'sand';
+                    if (document.getElementById('material-kaki-btn').classList.contains('active')) return 'kaki';
+                    return 'kaki'; // défaut
+                }
+
+                // Sélectionner une option + un matériau par défaut si rien n'est actif
+                ensureDefaultOption();
+                ensureDefaultMaterial();
+                // Activer Viewpoint 1 par défaut si présent
+                const vp1 = document.getElementById('viewpoint-1-btn');
+                if (vp1) vp1.classList.add('active');
+
+                return true;
+            }
+
+            function waitForTagManager() {
+                if (initUI()) return;
+                if (tries++ < maxTries) {
+                    requestAnimationFrame(waitForTagManager);
+                } else {
+                    setTimeout(waitForTagManager, 50); // fallback doux si toujours pas prêt
+                }
+            }
+
+            waitForTagManager();
             
             function updateButtonStates() {
                 if (!window.tagManager) return;
                 
-                const activeTags = window.tagManager.getActiveTags();
+                const activeTags = window.tagManager.getActiveTags ? window.tagManager.getActiveTags() : {};
                 
                 // Reset all buttons (except font buttons and viewpoint buttons)
                 document.querySelectorAll('.sidebar-btn:not([id^="font-"]):not([id^="viewpoint-"])').forEach(btn => {
@@ -154,28 +180,54 @@
                 });
                 
                 // Activate option buttons
-                activeTags.activeTags.forEach(tag => {
-                    if (tag === 'base') {
-                        const btn = document.getElementById('option1-btn');
-                        if (btn) {
-                            btn.classList.add('active');
-                        }
-                    }
-                });
+                const hasMlok = activeTags.activeTags && activeTags.activeTags.includes('mlok');
+                const hasPicatinny = activeTags.activeTags && activeTags.activeTags.includes('picatinny');
+
+                const option1Btn = document.getElementById('option1-btn');
+                const option2Btn = document.getElementById('option2-btn');
+                if (option1Btn && hasMlok) option1Btn.classList.add('active');
+                if (option2Btn && hasPicatinny) option2Btn.classList.add('active');
                 
-                // Activate material config buttons independently
-                // Bloc material buttons
-                const blocMaterials = ['red', 'blue', 'green'];
-                blocMaterials.forEach(material => {
-                    const btn = document.getElementById(`bloc-${material}-btn`);
+                // Activate material config buttons indépendamment
+                const materials = ['black', 'sand', 'kaki'];
+                materials.forEach(material => {
+                    const btn = document.getElementById(`material-${material}-btn`);
                     if (btn) {
                         btn.classList.remove('active');
-                        // Check if this material is currently applied to bloc
-                        if (activeTags.materials && activeTags.materials.bloc === material) {
+                        const hasMlokMat = activeTags.materials && activeTags.materials.grip_mlok === material;
+                        const hasPicMat = activeTags.materials && activeTags.materials.grip_picatinny === material;
+                        if (hasMlokMat || hasPicMat) {
                             btn.classList.add('active');
                         }
                     }
                 });
+            }
+
+            function ensureDefaultOption() {
+                if (!window.tagManager) return;
+                const activeTags = window.tagManager.getActiveTags ? window.tagManager.getActiveTags() : {};
+                const tags = activeTags.activeTags || [];
+                const hasMlok = tags.includes('mlok');
+                const hasPicatinny = tags.includes('picatinny');
+                if (!hasMlok && !hasPicatinny) {
+                    window.tagManager.setOption('mlok');
+                }
+                updateButtonStates();
+            }
+
+            function ensureDefaultMaterial() {
+                if (!window.tagManager) return;
+                const activeTags = window.tagManager.getActiveTags ? window.tagManager.getActiveTags() : {};
+                const materials = activeTags.materials || {};
+                const hasMlokMat = !!materials.grip_mlok;
+                const hasPicMat = !!materials.grip_picatinny;
+                if (!hasMlokMat) {
+                    window.tagManager.applyMaterialConfig('grip_mlok', 'black');
+                }
+                if (!hasPicMat) {
+                    window.tagManager.applyMaterialConfig('grip_picatinny', 'black');
+                }
+                updateButtonStates();
             }
         });
     </script>

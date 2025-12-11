@@ -2,60 +2,48 @@ const assetConfiguration = {
   models: {
     "part_model": {
       name: "Modèle Part",
-      file: "part.glb",
+      file: "grip.glb",
       format: "bin",
       dataOffset: 66,
       meshes: {
-        "bloc": {
-          materialSlots: ["slot1"],
-          tags: ["base"]
+        "grip_mlok": {
+          materialSlots: ["slot1", "slot2"],
+          tags: ["mlok"]
         },
-        "flag": {
-          materialSlots: ["slot1"],
-          tags: ["flag"]
-        },
-        "engraving": {
-          materialSlots: ["slot1"],
-          tags: ["engraving"]
+        "grip_picatinny": {
+          materialSlots: ["slot1", "slot2"],
+          tags: ["picatinny"]
         }
       }
     }
   },
   materialConfigs: {
-    "bloc": {
-      "red": {
-        "slot1": "red"
+    "grip_mlok": {
+      "black": {
+        "slot1": "red",
+        "slot2": "blue"
       },
-      "blue": {
-        "slot1": "blue"
+      "sand": {
+        "slot1": "blue",
+        "slot2": "green"
       },
-      "green": {
-        "slot1": "green"
+      "kaki": {
+        "slot1": "green",
+        "slot2": "red"
       }
     },
-    "flag": {
-      "none": {
-        "slot1": "red"
+    "grip_picatinny": {
+      "black": {
+        "slot1": "red",
+        "slot2": "blue"
       },
-      "france": {
-        "slot1": "flag_fr"
+      "sand": {
+        "slot1": "blue",
+        "slot2": "green"
       },
-      "unitedstates": {
-        "slot1": "flag_us"
-      },
-      "germany": {
-        "slot1": "flag_ger"
-      }
-    },
-    "engraving": {
-      "red": {
-        "slot1": "engraving_red"
-      },
-      "blue": {
-        "slot1": "engraving_blue"
-      },
-      "green": {
-        "slot1": "engraving_green"
+      "kaki": {
+        "slot1": "green",
+        "slot2": "red"
       }
     }
   }

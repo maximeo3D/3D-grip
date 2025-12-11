@@ -3,9 +3,9 @@
     "red": {
       "type": "pbr",
       "parent": "none",
-      "baseColor": "#424242",
-      "metallic": 0,
-      "roughness": 0.42000000000000004,
+      "baseColor": "#000000",
+      "metallic": 0.58,
+      "roughness": 0.5700000000000001,
       "alpha": 1,
       "albedoTexture": "None",
       "metallicTexture": "None",
@@ -27,13 +27,13 @@
     "green": {
       "type": "pbr",
       "parent": "red",
-      "baseColor": "#0d4900",
+      "baseColor": "#2b2f11",
       "roughness": 0.13999999999999999
     },
     "blue": {
       "type": "pbr",
       "parent": "red",
-      "baseColor": "#002183"
+      "baseColor": "#564f32"
     },
     "flag_fr": {
       "type": "pbr",
