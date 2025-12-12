@@ -20,30 +20,27 @@ const assetConfiguration = {
   materialConfigs: {
     "grip_mlok": {
       "black": {
-        "slot1": "red",
-        "slot2": "blue"
+        "slot1": "grip_black",
       },
       "sand": {
-        "slot1": "blue",
-        "slot2": "green"
+        "slot1": "grip_sand",
       },
       "kaki": {
-        "slot1": "green",
-        "slot2": "red"
+        "slot1": "grip_kaki",
       }
     },
     "grip_picatinny": {
       "black": {
-        "slot1": "red",
-        "slot2": "blue"
+        "slot1": "grip_black",
+        "slot2": "filament_black"
       },
       "sand": {
-        "slot1": "blue",
-        "slot2": "green"
+        "slot1": "grip_sand",
+        "slot2": "filament_sand"
       },
       "kaki": {
-        "slot1": "green",
-        "slot2": "red"
+        "slot1": "grip_kaki",
+        "slot2": "filament_kaki"
       }
     }
   }

@@ -1,11 +1,11 @@
 ﻿{
   "materials": {
-    "red": {
+    "filament_black": {
       "type": "pbr",
       "parent": "none",
       "baseColor": "#000000",
-      "metallic": 0.58,
-      "roughness": 0.5700000000000001,
+      "metallic": 0,
+      "roughness": 0.25,
       "alpha": 1,
       "albedoTexture": "None",
       "metallicTexture": "None",
@@ -20,76 +20,34 @@
       "uOffset": 0,
       "vOffset": 0,
       "uScale": 1,
-      "vScale": 16,
+      "vScale": 8,
       "wRotation": 0,
       "lightmapUVSet": 1
     },
-    "green": {
+    "filament_kaki": {
       "type": "pbr",
-      "parent": "red",
-      "baseColor": "#2b2f11",
-      "roughness": 0.13999999999999999
+      "parent": "filament_black",
+      "baseColor": "#1a1c0b"
     },
-    "blue": {
+    "filament_sand": {
       "type": "pbr",
-      "parent": "red",
-      "baseColor": "#564f32"
+      "parent": "filament_black",
+      "baseColor": "#756538"
     },
-    "flag_fr": {
-      "type": "pbr",
-      "parent": "flag_base",
-      "albedoTexture": "flag_fr.jpg"
-    },
-    "flag_us": {
-      "type": "pbr",
-      "parent": "flag_base",
-      "albedoTexture": "flag_us.png",
-      "useLightmapAsShadowmap": true
-    },
-    "flag_ger": {
-      "type": "pbr",
-      "parent": "flag_base",
-      "albedoTexture": "flag_ger.png",
-      "useLightmapAsShadowmap": true
-    },
-    "flag_base": {
+    "grip_black": {
       "type": "pbr",
       "parent": "none",
-      "baseColor": "#ffffff",
+      "baseColor": "#000000",
       "metallic": 0,
-      "roughness": 0,
+      "roughness": 0.25,
       "alpha": 1,
       "albedoTexture": "None",
       "metallicTexture": "None",
       "microSurfaceTexture": "None",
-      "ambientTexture": "None",
+      "ambientTexture": "grip_ambient.png",
       "opacityTexture": "None",
-      "bumpTexture": "None",
-      "bumpTextureIntensity": 1,
-      "lightmapTexture": "None",
-      "backFaceCulling": false,
-      "uOffset": 0,
-      "vOffset": 0,
-      "uScale": 1,
-      "vScale": 1,
-      "wRotation": 0,
-      "useLightmapAsShadowmap": true,
-      "lightmapUVSet": 0
-    },
-    "engraving_red": {
-      "type": "pbr",
-      "parent": "none",
-      "baseColor": "#000000",
-      "metallic": 0.17,
-      "roughness": 0.7000000000000001,
-      "alpha": 1,
-      "albedoTexture": "filament_tile_albedo.png",
-      "metallicTexture": "None",
-      "microSurfaceTexture": "None",
-      "ambientTexture": "None",
-      "opacityTexture": "None",
-      "bumpTexture": "filament_tile_nm.png",
-      "bumpTextureIntensity": 1,
+      "bumpTexture": "grip_normal.png",
+      "bumpTextureIntensity": 0.5,
       "lightmapTexture": "None",
       "useLightmapAsShadowmap": true,
       "backFaceCulling": true,
@@ -100,15 +58,15 @@
       "wRotation": 0,
       "lightmapUVSet": 0
     },
-    "engraving_blue": {
+    "grip_kaki": {
       "type": "pbr",
-      "parent": "engraving_red",
-      "baseColor": "#002183"
+      "parent": "grip_black",
+      "baseColor": "#1a1c0b"
     },
-    "engraving_green": {
+    "grip_sand": {
       "type": "pbr",
-      "parent": "engraving_red",
-      "baseColor": "#0d4900"
+      "parent": "grip_black",
+      "baseColor": "#756538"
     }
   }
 }

@@ -1,7 +1,7 @@
 ﻿{
   "environment": {
     "backgroundColor": "#ebebeb",
-    "hdrExposure": 1.8,
+    "hdrExposure": 1,
     "orientation": 60
   },
   "camera": {
@@ -26,9 +26,9 @@
   },
   "viewpoints": {
     "Viewpoint1": {
-      "alpha": 3.830997708127553,
+      "alpha": 4.0299652428549075,
       "beta": 1.2158707636692831,
-      "radius": 39.99055512075026,
+      "radius": 16,
       "fov": 15,
       "minDistance": 15,
       "maxDistance": 40,
