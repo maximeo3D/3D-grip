@@ -31,7 +31,7 @@
     <script src="https://cdn.jsdelivr.net/npm/tweakpane@3.1.10/dist/tweakpane.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/maximeo3D/3D-Viewer@refs/heads/master/tweakpaneManager.js"></script>
     <script>
-        const showSidebar = true;
+        const showSidebar = false;
         const showTweakpane = false;
         window.showTweakpane = showTweakpane;
         document.addEventListener('DOMContentLoaded', () => {
@@ -229,6 +229,93 @@
                 }
                 updateButtonStates();
             }
+
+            // API publique pour contrôle externe
+            window.gripViewerAPI = {
+                // Changer la couleur
+                setColor: function(color) {
+                    if (!window.tagManager) {
+                        console.warn('TagManager not ready yet');
+                        return false;
+                    }
+                    const validColors = ['black', 'sand', 'kaki'];
+                    if (!validColors.includes(color)) {
+                        console.warn('Invalid color. Use: black, sand, or kaki');
+                        return false;
+                    }
+                    window.tagManager.applyMaterialConfig('grip_mlok', color);
+                    window.tagManager.applyMaterialConfig('grip_picatinny', color);
+                    updateButtonStates();
+                    return true;
+                },
+                
+                // Changer l'option (mlok ou picatinny)
+                setOption: function(option) {
+                    if (!window.tagManager) {
+                        console.warn('TagManager not ready yet');
+                        return false;
+                    }
+                    const validOptions = ['mlok', 'picatinny'];
+                    if (!validOptions.includes(option)) {
+                        console.warn('Invalid option. Use: mlok or picatinny');
+                        return false;
+                    }
+                    window.tagManager.setOption(option);
+                    updateButtonStates();
+                    return true;
+                },
+                
+                // Aller à un viewpoint
+                gotoViewpoint: function(viewpointNumber) {
+                    if (window.gotoViewpoint) {
+                        window.gotoViewpoint(`Viewpoint${viewpointNumber}`);
+                        return true;
+                    }
+                    return false;
+                },
+                
+                // Obtenir l'état actuel
+                getState: function() {
+                    if (!window.tagManager) return null;
+                    return window.tagManager.getActiveTags();
+                }
+            };
+            
+            // Écouter les messages postMessage pour iframe
+            window.addEventListener('message', function(event) {
+                // Pour la sécurité, vérifiez l'origine en production
+                // if (event.origin !== 'https://votre-site.com') return;
+                
+                const data = event.data;
+                if (!data || !data.action) return;
+                
+                let result = { success: false };
+                
+                switch(data.action) {
+                    case 'setColor':
+                        result.success = window.gripViewerAPI.setColor(data.color);
+                        break;
+                    case 'setOption':
+                        result.success = window.gripViewerAPI.setOption(data.option);
+                        break;
+                    case 'gotoViewpoint':
+                        result.success = window.gripViewerAPI.gotoViewpoint(data.viewpoint);
+                        break;
+                    case 'getState':
+                        result.success = true;
+                        result.state = window.gripViewerAPI.getState();
+                        break;
+                }
+                
+                // Répondre au parent
+                if (event.source) {
+                    event.source.postMessage({
+                        type: 'gripViewerResponse',
+                        action: data.action,
+                        result: result
+                    }, event.origin);
+                }
+            });
         });
     </script>
 </body>
